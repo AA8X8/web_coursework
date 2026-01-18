@@ -1,4 +1,3 @@
-// Restaurant.java (аналог Company)
 package org.example.stolikonline1.models.entities;
 
 import jakarta.persistence.*;
