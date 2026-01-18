@@ -10,13 +10,12 @@ public class FutureWithinOneYearValidator implements ConstraintValidator<FutureW
 
     @Override
     public void initialize(FutureWithinOneYear constraintAnnotation) {
-        // Инициализация при необходимости
     }
 
     @Override
     public boolean isValid(LocalDateTime value, ConstraintValidatorContext context) {
         if (value == null) {
-            return true; // Пустое значение проверяется другой аннотацией @NotNull
+            return true;
         }
 
         LocalDateTime now = LocalDateTime.now();
