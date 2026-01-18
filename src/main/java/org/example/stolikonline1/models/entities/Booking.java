@@ -1,4 +1,3 @@
-// Booking.java (аналог Employee)
 package org.example.stolikonline1.models.entities;
 
 import jakarta.persistence.*;
