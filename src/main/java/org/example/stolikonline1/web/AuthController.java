@@ -26,7 +26,7 @@ public class AuthController {
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     private final AuthService authService;
-    private final UserService userService; // Добавляем UserService
+    private final UserService userService;
 
     public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
