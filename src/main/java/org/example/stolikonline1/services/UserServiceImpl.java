@@ -26,8 +26,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void registerUser(UserRegistrationDto userRegistrationDto) {
-        // Реализация регистрации пользователя
-        // Эта логика уже есть в AuthServiceImpl
     }
 
     @Override
@@ -45,14 +43,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByPhone(phone).isPresent();
     }
 
-    // ДОБАВЛЕННЫЕ МЕТОДЫ:
-
     @Override
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    // UserServiceImpl.java - метод getUserProfile
     @Override
     public UserProfileDto getUserProfile(String username) {
         User user = userRepository.findByUsername(username)
@@ -65,7 +60,6 @@ public class UserServiceImpl implements UserService {
         profileDto.setPhone(user.getPhone());
         profileDto.setAge(user.getAge());
 
-        // Устанавливаем URL аватара: если в базе нет, используем стандартный
         String avatarUrl = user.getProfilePictureUrl();
         if (avatarUrl == null || avatarUrl.trim().isEmpty()) {
             avatarUrl = "/images/user-avatar.png"; // Стандартный аватар
@@ -77,7 +71,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserStatsDto getUserStats(String username) {
-        // Пока возвращаем заглушку - реальная статистика будет считаться в контроллере
         return new UserStatsDto(0, 0, 0, 0);
     }
 }
