@@ -15,7 +15,7 @@ public class ShowBookingInfoDto {
     public ShowBookingInfoDto() {
     }
 
-    // Конструктор для JPA запроса - ИЗМЕНЕН ТИП на String
+    // Конструктор для JPA запроса
     public ShowBookingInfoDto(String id, String restaurantName, String restaurantId,
                               LocalDateTime bookingDateTime, Integer numberOfGuests,
                               String specialRequests, String status) {
