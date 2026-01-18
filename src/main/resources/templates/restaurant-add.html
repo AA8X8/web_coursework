@@ -24,7 +24,7 @@
 
         <!-- Форма для админов -->
         <div sec:authorize="hasAnyRole('ADMIN', 'MODERATOR')">
-            <form th:action="@{/restaurants/add}" method="post" th:object="${restaurantDto}">
+            <form th:action="@{/restaurants/add}" method="post" th:object="${restaurantModel}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                 <div class="grid">
