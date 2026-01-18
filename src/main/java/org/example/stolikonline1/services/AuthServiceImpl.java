@@ -47,7 +47,6 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Номер телефона уже используется!");
         }
 
-        // Проверка возраста
         if (registrationDTO.getAge() < 14 || registrationDTO.getAge() > 90) {
             throw new RuntimeException("Возраст должен быть от 14 до 90 лет!");
         }
