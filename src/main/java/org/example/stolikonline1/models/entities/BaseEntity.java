@@ -1,4 +1,3 @@
-// BaseEntity.java (остается таким же)
 package org.example.stolikonline1.models.entities;
 
 import jakarta.persistence.*;
