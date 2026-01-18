@@ -12,7 +12,6 @@ public interface UserService {
     boolean emailExists(String email);
     boolean phoneExists(String phone);
 
-    // ДОБАВЬТЕ ЭТИ МЕТОДЫ:
     Optional<User> findByUsername(String username);
     UserProfileDto getUserProfile(String username);
     UserStatsDto getUserStats(String username);
