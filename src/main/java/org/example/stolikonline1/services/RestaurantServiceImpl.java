@@ -165,14 +165,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public List<ShowRestaurantInfoDto> findByTown(String town) {
         log.debug("Поиск ресторанов в городе: {}", town);
-        // Временная реализация:
         return searchRestaurants(town);
     }
 
     @Override
     public List<ShowRestaurantInfoDto> findByBudgetGreaterThan(Double minBudget) {
         log.debug("Поиск ресторанов с бюджетом больше: {}", minBudget);
-        // В текущей реализации нет поля "budget", возвращаем пустой список
         return List.of();
     }
 
