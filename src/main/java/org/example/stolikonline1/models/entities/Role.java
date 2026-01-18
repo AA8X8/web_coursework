@@ -1,4 +1,3 @@
-// Role.java
 package org.example.stolikonline1.models.entities;
 
 import jakarta.persistence.*;
