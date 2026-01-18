@@ -1,0 +1,125 @@
+<!-- head.html -->
+<head th:fragment="head" xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>СтоликОнлайн - Бронирование ресторанов</title>
+    <!-- Pico CSS 1.5.10 (стабильная версия) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css">
+
+    <style>
+        /* Основные кастомные стили */
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        /* Навигация */
+        nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+
+        nav a, nav button {
+            color: white !important;
+        }
+
+        /* Карточки */
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: white;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s;
+        }
+
+        /* Герой секция */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+            url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            color: white;
+            padding: 4rem 0;
+            border-radius: 0.5rem;
+        }
+
+        /* Сетка */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Бейджи */
+        .cuisine-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin: 0.25rem;
+        }
+
+        /* Изображения ресторанов */
+        .restaurant-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        /* Текст */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        .text-success {
+            color: #28a745 !important;
+        }
+
+        /* Рейтинги */
+        .rating-stars {
+            color: #ffc107;
+        }
+
+        /* Сообщения */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Валидация форм */
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>

@@ -1,0 +1,36 @@
+/* В custom.css добавьте: */
+
+/* Общие стили для темной и светлой темы */
+body.dark-theme .hero-main {
+    background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+}
+
+body.dark-theme .search-card {
+    background: #2d2d2d;
+    border-color: #404040;
+}
+
+body.dark-theme .search-card h2 {
+    color: #ffffff;
+}
+
+body.dark-theme .search-card > p {
+    color: #cccccc;
+}
+
+body.dark-theme .feature-card {
+    background: #2d2d2d;
+    border: 1px solid #404040;
+}
+
+body.dark-theme .feature-card h3 {
+    color: #ffffff;
+}
+
+body.dark-theme .feature-card p {
+    color: #cccccc;
+}
+
+body.dark-theme .popular-restaurants h2 {
+    color: #ffffff;
+}

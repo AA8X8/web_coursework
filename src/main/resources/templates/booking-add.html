@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}">
+    <title>Бронирование столика</title>
+</head>
+<body class="dark-theme">
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+    <article style="max-width: 800px; margin: 0 auto;">
+        <hgroup>
+            <h1>Бронирование столика</h1>
+            <p>Забронируйте столик в выбранном ресторане</p>
+        </hgroup>
+
+        <div sec:authorize="!isAuthenticated()" class="dark-auth-block">
+            <h3>🔒 Требуется вход</h3>
+            <p>Для бронирования столика необходимо войти в систему</p>
+            <div style="margin-top: 1rem;">
+                <a href="/users/login" role="button" class="contrast dark-button">Войти</a>
+                <a href="/users/register" role="button" class="secondary dark-button">Зарегистрироваться</a>
+            </div>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <div th:if="${errorMessage}" class="dark-error-message">
+                <p th:text="${errorMessage}" style="margin: 0; color: #f8d7da;"></p>
+            </div>
+
+            <div th:if="${successMessage}" class="dark-success-message">
+                <p th:text="${successMessage}" style="margin: 0; color: #d4edda;"></p>
+            </div>
+
+            <form th:action="@{/bookings/add}"
+                  th:method="post"
+                  th:object="${bookingModel}"
+                  class="dark-form">
+
+                <!-- CSRF ТОКЕН - ОБЯЗАТЕЛЬНО! -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <label for="restaurantName">
+                    Выберите ресторан
+                    <select id="restaurantName" name="restaurantName" th:field="*{restaurantName}" required onchange="updateRestaurantInfo()" class="dark-select">
+                        <option value="">Выберите ресторан...</option>
+                        <option th:each="restaurant : ${availableRestaurants}"
+                                th:value="${restaurant.name}"
+                                th:text="${restaurant.name} + ' (' + ${restaurant.cuisine} + ')'"
+                                th:data-address="${restaurant.address}"
+                                th:data-phone="${restaurant.phone}"
+                                th:data-hours="${restaurant.openingTime} + ' - ' + ${restaurant.closingTime}"></option>
+                    </select>
+                    <small th:if="${#fields.hasErrors('restaurantName')}" th:errors="*{restaurantName}" class="text-danger"></small>
+                </label>
+
+                <div id="restaurantInfo" class="dark-restaurant-info">
+                    <p><strong>Адрес:</strong> <span id="restaurantAddress"></span></p>
+                    <p><strong>Телефон:</strong> <span id="restaurantPhone"></span></p>
+                    <p><strong>Часы работы:</strong> <span id="restaurantHours"></span></p>
+                </div>
+
+                <div class="grid">
+                    <label for="bookingDateTime">
+                        Дата и время бронирования
+                        <input name="bookingDateTime"
+                               type="datetime-local"
+                               id="bookingDateTime"
+                               th:field="*{bookingDateTime}"
+                               class="dark-input"
+                               required/>
+                        <small th:if="${#fields.hasErrors('bookingDateTime')}" th:errors="*{bookingDateTime}" class="text-danger"></small>
+                    </label>
+
+                    <label for="numberOfGuests">
+                        Количество гостей
+                        <input name="numberOfGuests"
+                               type="number"
+                               min="1"
+                               max="20"
+                               id="numberOfGuests"
+                               placeholder="1-20"
+                               th:field="*{numberOfGuests}"
+                               class="dark-input"
+                               required/>
+                        <small th:if="${#fields.hasErrors('numberOfGuests')}" th:errors="*{numberOfGuests}" class="text-danger"></small>
+                    </label>
+                </div>
+
+                <label for="specialRequests">
+                    Особые пожелания
+                    <textarea id="specialRequests"
+                              name="specialRequests"
+                              rows="3"
+                              placeholder="Аллергии, предпочтения по столику, праздник и т.д."
+                              th:field="*{specialRequests}"
+                              class="dark-textarea"></textarea>
+                    <small th:if="${#fields.hasErrors('specialRequests')}" th:errors="*{specialRequests}" class="text-danger"></small>
+                </label>
+
+                <div class="dark-booking-info">
+                    <h3>📝 Информация о бронировании</h3>
+                    <p>После подтверждения вы получите уведомление на email.</p>
+                    <p>Отменить бронирование можно в любое время в личном кабинете.</p>
+                </div>
+
+                <button type="submit" class="dark-submit-button">Забронировать столик</button>
+            </form>
+
+            <script>
+                function updateRestaurantInfo() {
+                    const select = document.getElementById('restaurantName');
+                    const selectedOption = select.options[select.selectedIndex];
+                    const infoDiv = document.getElementById('restaurantInfo');
+
+                    if (selectedOption.value) {
+                        document.getElementById('restaurantAddress').textContent = selectedOption.getAttribute('data-address');
+                        document.getElementById('restaurantPhone').textContent = selectedOption.getAttribute('data-phone');
+                        document.getElementById('restaurantHours').textContent = selectedOption.getAttribute('data-hours');
+                        infoDiv.style.display = 'block';
+                    } else {
+                        infoDiv.style.display = 'none';
+                    }
+                }
+
+                // Инициализация при загрузке страницы
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Установить минимальную дату на сегодня
+                    const today = new Date().toISOString().slice(0, 16);
+                    const dateInput = document.getElementById('bookingDateTime');
+                    if (dateInput) {
+                        dateInput.min = today;
+                    }
+
+                    // Инициализировать информацию о ресторане
+                    updateRestaurantInfo();
+                });
+            </script>
+        </div>
+    </article>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<style>
+    /* Основные цвета темной темы */
+    :root {
+        --dark-bg: #1a1a1a;
+        --card-bg: #2d2d2d;
+        --card-border: #404040;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --accent-color: #3498db;
+        --accent-hover: #2980b9;
+        --input-bg: #2d2d2d;
+        --select-bg: #2d2d2d;
+        --info-bg: #2d2d2d;
+    }
+
+    /* Темный фон для всей страницы */
+    body.dark-theme {
+        background-color: var(--dark-bg);
+        color: var(--text-primary);
+    }
+
+    /* Темный блок с требованием входа */
+    .dark-auth-block {
+        text-align: center;
+        padding: 3rem;
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 0.375rem;
+        margin-bottom: 2rem;
+    }
+
+    .dark-auth-block h3 {
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .dark-auth-block p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Темные кнопки */
+    .dark-button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin: 0 0.5rem;
+    }
+
+    .dark-button.contrast {
+        background-color: var(--accent-color);
+        color: white;
+    }
+
+    .dark-button.contrast:hover {
+        background-color: var(--accent-hover);
+        transform: translateY(-2px);
+    }
+
+    .dark-button.secondary {
+        background-color: #555;
+        color: white;
+        border: 1px solid #666;
+    }
+
+    .dark-button.secondary:hover {
+        background-color: #666;
+        border-color: var(--accent-color);
+        color: var(--accent-color);
+    }
+
+    /* Темное сообщение об успехе */
+    .dark-success-message {
+        padding: 1rem;
+        margin-bottom: 2rem;
+        background-color: #155724;
+        border-radius: 0.375rem;
+        border-left: 4px solid #28a745;
+    }
+
+    /* Темное сообщение об ошибке */
+    .dark-error-message {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background-color: #721c24;
+        border-radius: 0.375rem;
+        border-left: 4px solid #dc3545;
+    }
+
+    /* Темная форма */
+    .dark-form {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 2rem;
+    }
+
+    /* Темные лейблы */
+    .dark-form label {
+        color: var(--text-primary);
+        display: block;
+        margin-bottom: 1.5rem;
+    }
+
+    .dark-form label strong {
+        color: var(--text-primary);
+    }
+
+    /* Темный селект */
+    .dark-select {
+        background-color: var(--select-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--card-border);
+        border-radius: 6px;
+        padding: 0.75rem;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .dark-select:focus {
+        border-color: var(--accent-color);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    /* Темные инпуты */
+    .dark-input {
+        background-color: var(--input-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--card-border);
+        border-radius: 6px;
+        padding: 0.75rem;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .dark-input:focus {
+        border-color: var(--accent-color);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .dark-input::placeholder {
+        color: #888;
+    }
+
+    /* Темный textarea */
+    .dark-textarea {
+        background-color: var(--input-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--card-border);
+        border-radius: 6px;
+        padding: 0.75rem;
+        width: 100%;
+        margin-top: 0.5rem;
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .dark-textarea:focus {
+        border-color: var(--accent-color);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .dark-textarea::placeholder {
+        color: #888;
+    }
+
+    /* Темный блок информации о ресторане */
+    .dark-restaurant-info {
+        display: none;
+        padding: 1rem;
+        background-color: var(--info-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 0.375rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .dark-restaurant-info p {
+        color: var(--text-primary);
+        margin: 0.5rem 0;
+    }
+
+    .dark-restaurant-info strong {
+        color: var(--accent-color);
+    }
+
+    /* Темный блок информации о бронировании */
+    .dark-booking-info {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: #1e3a5f;
+        color: white;
+        border-radius: 0.375rem;
+        border: 1px solid #2d4a7a;
+    }
+
+    .dark-booking-info h3 {
+        color: #bbdefb;
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .dark-booking-info p {
+        color: #e3f2fd;
+        margin: 0.5rem 0;
+    }
+
+    /* Темная кнопка отправки */
+    .dark-submit-button {
+        width: 100%;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .dark-submit-button:hover {
+        background-color: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    /* Сообщения об ошибках */
+    .text-danger {
+        color: #ff6b6b;
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    /* Сетка */
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Заголовки страницы */
+    h1 {
+        color: var(--text-primary);
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    hgroup p {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    /* Контейнер */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .dark-form {
+            padding: 1.5rem;
+        }
+
+        .container {
+            padding: 1rem;
+        }
+
+        .dark-auth-block {
+            padding: 2rem 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dark-form {
+            padding: 1rem;
+        }
+
+        .dark-button {
+            display: block;
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+
+        .dark-auth-block div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+</style>
+
+</body>
+</html>

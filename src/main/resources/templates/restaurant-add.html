@@ -1,0 +1,204 @@
+<!-- restaurant-add.html -->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/head :: head">
+    <title>Добавить ресторан - СтоликОнлайн</title>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <hgroup>
+            <h1>Добавление ресторана</h1>
+            <p>Заполните информацию о ресторане</p>
+        </hgroup>
+
+        <!-- Проверка прав -->
+        <div sec:authorize="!hasAnyRole('ADMIN', 'MODERATOR')" class="card text-center">
+            <h3>🚫 Доступ запрещен</h3>
+            <p>Только администраторы могут добавлять рестораны</p>
+            <a href="/static" class="secondary" style="margin-top: 1rem;">На главную</a>
+        </div>
+
+        <!-- Форма для админов -->
+        <div sec:authorize="hasAnyRole('ADMIN', 'MODERATOR')">
+            <form th:action="@{/restaurants/add}" method="post" th:object="${restaurantDto}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div class="grid">
+                    <div>
+                        <label>
+                            Название *
+                            <input type="text"
+                                   th:field="*{name}"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                   placeholder="Название ресторана"
+                                   required>
+                            <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            Кухня *
+                            <input type="text"
+                                   th:field="*{cuisine}"
+                                   th:classappend="${#fields.hasErrors('cuisine')} ? 'is-invalid' : ''"
+                                   placeholder="Итальянская, Японская..."
+                                   required>
+                            <small th:if="${#fields.hasErrors('cuisine')}" th:errors="*{cuisine}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+                </div>
+
+                <label>
+                    Адрес *
+                    <input type="text"
+                           th:field="*{address}"
+                           th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : ''"
+                           placeholder="Полный адрес"
+                           required>
+                    <small th:if="${#fields.hasErrors('address')}" th:errors="*{address}"
+                           class="error-message"></small>
+                </label>
+
+                <label>
+                    Описание *
+                    <textarea th:field="*{description}"
+                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"
+                              rows="4"
+                              placeholder="Описание ресторана..."
+                              required></textarea>
+                    <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+                           class="error-message"></small>
+                </label>
+
+                <div class="grid">
+                    <div>
+                        <label>
+                            Телефон *
+                            <input type="tel"
+                                   th:field="*{phone}"
+                                   th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
+                                   placeholder="+7 (999) 123-45-67"
+                                   required>
+                            <small th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            Email *
+                            <input type="email"
+                                   th:field="*{email}"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                   placeholder="restaurant@example.com"
+                                   required>
+                            <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div>
+                        <label>
+                            Время открытия *
+                            <input type="time"
+                                   th:field="*{openingTime}"
+                                   th:classappend="${#fields.hasErrors('openingTime')} ? 'is-invalid' : ''"
+                                   required>
+                            <small th:if="${#fields.hasErrors('openingTime')}" th:errors="*{openingTime}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            Время закрытия *
+                            <input type="time"
+                                   th:field="*{closingTime}"
+                                   th:classappend="${#fields.hasErrors('closingTime')} ? 'is-invalid' : ''"
+                                   required>
+                            <small th:if="${#fields.hasErrors('closingTime')}" th:errors="*{closingTime}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div>
+                        <label>
+                            Рейтинг (0-5) *
+                            <input type="number"
+                                   th:field="*{rating}"
+                                   th:classappend="${#fields.hasErrors('rating')} ? 'is-invalid' : ''"
+                                   step="0.1" min="0" max="5"
+                                   placeholder="4.5"
+                                   required>
+                            <small th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            Ценовой уровень *
+                            <select th:field="*{priceLevel}"
+                                    th:classappend="${#fields.hasErrors('priceLevel')} ? 'is-invalid' : ''"
+                                    required>
+                                <option value="">Выберите...</option>
+                                <option value="1">💰 Низкий</option>
+                                <option value="2">💰💰 Средний</option>
+                                <option value="3">💰💰💰 Высокий</option>
+                            </select>
+                            <small th:if="${#fields.hasErrors('priceLevel')}" th:errors="*{priceLevel}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div>
+                        <label>
+                            Вместимость *
+                            <input type="number"
+                                   th:field="*{maxCapacity}"
+                                   th:classappend="${#fields.hasErrors('maxCapacity')} ? 'is-invalid' : ''"
+                                   min="1"
+                                   placeholder="50"
+                                   required>
+                            <small th:if="${#fields.hasErrors('maxCapacity')}" th:errors="*{maxCapacity}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            Фото (URL)
+                            <input type="url"
+                                   th:field="*{photoUrl}"
+                                   th:classappend="${#fields.hasErrors('photoUrl')} ? 'is-invalid' : ''"
+                                   placeholder="https://example.com/photo.jpg">
+                            <small th:if="${#fields.hasErrors('photoUrl')}" th:errors="*{photoUrl}"
+                                   class="error-message"></small>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="contrast" style="width: 100%; margin-top: 1rem;">
+                    Добавить ресторан
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+/* /resources/static/css/home-page.css */
+/* Стили для главной страницы */
+
+/* Основные цвета для главной страницы */
+:root {
+    --hero-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --hero-text: #ffffff;
+    --search-bg: #ffffff;
+    --search-text: #333333;
+    --accent-color: #667eea;
+}
+
+/* Герой секция с градиентом */
+.hero-main {
+    background: var(--hero-bg);
+    color: var(--hero-text);
+    padding: 4rem 1rem;
+    text-align: center;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.hero-main > * {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-main h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero-main p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+/* Контейнер для поиска */
+.search-container {
+    max-width: 800px;
+    margin: -3rem auto 3rem;
+    position: relative;
+    z-index: 100;
+}
+
+/* Карточка поиска */
+.search-card {
+    background: var(--search-bg);
+    color: var(--search-text);
+    border-radius: 1rem;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.search-card h2 {
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.75rem;
+}
+
+.search-card > p {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+/* Форма поиска на главной */
+.search-form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 50px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-form input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-form button {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.search-form button:hover {
+    background: #5a6fd8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Особенности сервиса */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.feature-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* Популярные рестораны */
+.popular-restaurants {
+    margin: 4rem 0;
+}
+
+.popular-restaurants h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .hero-main h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-main p {
+        font-size: 1.1rem;
+    }
+
+    .search-container {
+        margin: -2rem auto 2rem;
+    }
+
+    .search-card {
+        padding: 1.5rem;
+    }
+
+    .search-form {
+        flex-direction: column;
+    }
+
+    .search-form input,
+    .search-form button {
+        width: 100%;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-main {
+        padding: 3rem 1rem;
+    }
+
+    .hero-main h1 {
+        font-size: 2rem;
+    }
+
+    .hero-main p {
+        font-size: 1rem;
+    }
+
+    .search-card h2 {
+        font-size: 1.5rem;
+    }
+}

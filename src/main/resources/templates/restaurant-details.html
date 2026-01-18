@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/head :: head">
+  <title th:text="${restaurant.name} + ' - СтоликОнлайн'"></title>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container">
+  <!-- Информация о ресторане -->
+  <article class="card">
+    <div class="grid">
+      <div>
+        <img th:src="${restaurant.photoUrl ?: '/pic/restaurant-default.jpg'}"
+             alt="Ресторан"
+             style="width: 100%; border-radius: 0.5rem;"
+             onerror="this.src='/pic/restaurant-default.jpg'">
+      </div>
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: start;">
+          <h2 th:text="${restaurant.name}"></h2>
+          <div>
+            <span class="rating-stars" th:text="${restaurant.rating} + '⭐'"></span>
+            <span th:if="${restaurant.priceLevel == 1}" class="cuisine-badge">💰</span>
+            <span th:if="${restaurant.priceLevel == 2}" class="cuisine-badge">💰💰</span>
+            <span th:if="${restaurant.priceLevel == 3}" class="cuisine-badge">💰💰💰</span>
+          </div>
+        </div>
+
+        <p><strong>Тип кухни:</strong> <span class="cuisine-badge" th:text="${restaurant.cuisine}"></span></p>
+        <p><strong>Адрес:</strong> <span th:text="${restaurant.address}"></span></p>
+        <p><strong>Телефон:</strong> <span th:text="${restaurant.phone}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${restaurant.email}"></span></p>
+        <p><strong>Часы работы:</strong>
+          <span th:text="${restaurant.openingTime} + ' - ' + ${restaurant.closingTime}"></span>
+        </p>
+        <p><strong>Вместимость:</strong> <span th:text="${restaurant.maxCapacity} + ' человек'"></span></p>
+
+        <div style="margin-top: 1.5rem;">
+          <h3>Описание</h3>
+          <p th:text="${restaurant.description}"></p>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+          <!-- ИСПРАВЛЕНО: используем restaurantName вместо restaurantId -->
+          <a th:href="@{/bookings/add(restaurantName=${restaurant.name})}"
+             role="button"
+             class="contrast"
+             style="flex: 1; text-align: center;">
+            🍽️ Забронировать столик
+          </a>
+
+          <div sec:authorize="hasRole('ADMIN')" style="flex: 1;">
+            <!-- ИСПРАВЛЕНО: используем name вместо id -->
+            <a th:href="@{/restaurants/delete/{name}(name=${restaurant.name})}"
+               role="button"
+               class="secondary"
+               onclick="return confirm('Вы уверены, что хотите удалить этот ресторан?')"
+               style="display: block; text-align: center;">
+              Удалить ресторан
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Отзывы -->
+  <section style="margin-top: 3rem;">
+    <hgroup>
+      <h2>Отзывы и рейтинги</h2>
+      <p>Что говорят посетители</p>
+    </hgroup>
+
+    <div th:if="${reviews != null and !reviews.empty}">
+      <div class="grid">
+        <article th:each="review : ${reviews}" class="card">
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+              <strong th:text="${review.userName}"></strong>
+              <div class="rating-stars">
+                <span th:each="i : ${#numbers.sequence(1, 5)}">
+                  <span th:if="${i <= review.rating}">⭐</span>
+                  <span th:if="${i > review.rating}">☆</span>
+                </span>
+              </div>
+            </div>
+            <small th:text="${#temporals.format(review.createdAt, 'dd.MM.yyyy')}"></small>
+          </div>
+          <p style="margin-top: 1rem;" th:text="${review.content}"></p>
+        </article>
+      </div>
+    </div>
+
+    <div th:if="${reviews == null or reviews.empty}" class="text-center card">
+      <p>Пока нет отзывов. Будьте первым!</p>
+    </div>
+  </section>
+
+  <!-- Форма для отзыва (комментируем, так как нет контроллера для отзывов) -->
+  <!--
+  <article sec:authorize="isAuthenticated()" class="card" style="margin-top: 2rem;">
+    <h3>Оставить отзыв</h3>
+    <form th:action="@{/reviews/add}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      <input type="hidden" name="restaurantId" th:value="${restaurant.id}">
+
+      <label>
+        Ваша оценка (1-5)
+        <select name="rating" required>
+          <option value="5">5 ⭐⭐⭐⭐⭐</option>
+          <option value="4">4 ⭐⭐⭐⭐</option>
+          <option value="3">3 ⭐⭐⭐</option>
+          <option value="2">2 ⭐⭐</option>
+          <option value="1">1 ⭐</option>
+        </select>
+      </label>
+
+      <label>
+        Ваш отзыв
+        <textarea name="content" rows="3" placeholder="Поделитесь впечатлениями..." required></textarea>
+      </label>
+
+      <button type="submit" class="secondary">Отправить отзыв</button>
+    </form>
+  </article>
+  -->
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<style>
+  /* Основные цвета темной темы */
+  :root {
+    --dark-bg: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --card-border: #404040;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --accent-color: #3498db;
+    --accent-hover: #2980b9;
+    --badge-bg: #3a3a3a;
+    --success-bg: #155724;
+    --error-bg: #721c24;
+  }
+
+  /* Темный фон для всей страницы */
+  body {
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+  }
+
+  /* Темные карточки ресторанов */
+  .card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border-color: var(--accent-color);
+  }
+
+  /* Заголовки в карточках */
+  .card h3 {
+    color: var(--text-primary);
+    margin-top: 0;
+    font-size: 1.4rem;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Текст в карточках */
+  .card p {
+    color: var(--text-secondary);
+    margin: 0.5rem 0;
+  }
+
+  /* Бейджи кухни */
+  .cuisine-badge {
+    background-color: var(--badge-bg);
+    color: var(--accent-color);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border: 1px solid var(--accent-color);
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Звезды рейтинга */
+  .rating-stars {
+    color: #ffd700; /* Золотой цвет для звезд */
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  /* Кнопки в карточках - ИСПРАВЛЕНО (уменьшен размер) */
+  .card-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+
+  .card-buttons a {
+    text-align: center;
+    padding: 0.5rem 0.3rem; /* Уменьшен padding */
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 0.9rem; /* Уменьшен размер шрифта */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-buttons .secondary {
+    background-color: #555;
+    color: white;
+    border: 1px solid #666;
+  }
+
+  .card-buttons .secondary:hover {
+    background-color: #666;
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+  }
+
+  .card-buttons .contrast {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+  }
+
+  .card-buttons .contrast:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.05);
+  }
+
+  /* Общие стили для кнопок */
+  .secondary {
+    background-color: #555;
+    color: white;
+    border: 1px solid #666;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .secondary:hover {
+    background-color: #666;
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+  }
+
+  .contrast {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .contrast:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.05);
+  }
+
+  /* Сообщения */
+  .success-message {
+    background-color: var(--success-bg);
+    color: #d4edda;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #28a745;
+    margin-bottom: 1rem;
+  }
+
+  .error-message {
+    background-color: var(--error-bg);
+    color: #f8d7da;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #dc3545;
+    margin-bottom: 1rem;
+  }
+
+  /* Пагинация */
+  nav ul li a.outline {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+  }
+
+  nav ul li a.outline:hover {
+    background-color: var(--accent-color);
+    color: white;
+  }
+
+  /* Поиск и фильтры */
+  input, select, button[type="submit"] {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 0.7rem;
+  }
+
+  input::placeholder {
+    color: #888;
+  }
+
+  input:focus, select:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  }
+
+  /* Заголовок страницы */
+  h1 {
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  hgroup p {
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+
+  /* Когда нет ресторанов */
+  .text-center.card {
+    background-color: var(--card-bg);
+    border: 2px dashed var(--card-border);
+    padding: 2rem;
+  }
+
+  .text-center.card h3 {
+    color: var(--text-primary);
+  }
+
+  .text-center.card p {
+    color: var(--text-secondary);
+  }
+
+  /* Сетка грида */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Изображения ресторанов */
+  .restaurant-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid var(--card-border);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .restaurant-image:hover {
+    border-color: var(--accent-color);
+    transform: scale(1.02);
+  }
+
+  /* Ценовой уровень */
+  p strong {
+    color: var(--text-primary);
+    margin-right: 0.5rem;
+  }
+
+  /* Контейнер */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* Адаптивность для мобильных устройств */
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .card-buttons {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .card-buttons a {
+      padding: 0.6rem 0.4rem;
+      font-size: 0.9rem;
+    }
+
+    .container {
+      padding: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card-buttons a {
+      font-size: 0.85rem;
+      padding: 0.5rem 0.3rem;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+    }
+
+    .grid {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+  }
+
+  @media (max-width: 360px) {
+    .card-buttons a {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.2rem;
+    }
+
+    .cuisine-badge {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .card {
+      padding: 1rem;
+    }
+  }
+</style>
+
+</body>
+</html>

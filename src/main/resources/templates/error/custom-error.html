@@ -1,0 +1,31 @@
+<!-- custom-error.html -->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+<main class="container">
+    <article class="text-center" style="padding: 4rem 0;">
+        <hgroup>
+            <h1 th:text="${errorCode} + ' - ' + ${errorTitle}">Ошибка</h1>
+            <p th:text="${errorMessage}">Произошла ошибка</p>
+        </hgroup>
+
+        <div th:if="${errorCode == '404'}" style="margin: 2rem 0;">
+            <img src="/pic/404.png" alt="Страница не найдена" style="width: 300px; max-width: 100%;">
+        </div>
+
+        <div th:if="${errorCode == '500'}" style="margin: 2rem 0;">
+            <img src="/pic/500.png" alt="Ошибка сервера" style="width: 300px; max-width: 100%;">
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <a href="/" role="button" class="contrast">🏠 Вернуться на главную</a>
+            <a href="javascript:history.back()" role="button" class="secondary">↩️ Назад</a>
+            <a href="/restaurants/all" role="button" class="outline">🍽️ Смотреть рестораны</a>
+        </div>
+    </article>
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

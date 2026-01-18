@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+    <title>О нас - СтоликОнлайн</title>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container">
+    <article>
+        <hgroup>
+            <h1>О проекте СтоликОнлайн</h1>
+            <p>Узнайте больше о нашей платформе для бронирования столиков</p>
+        </hgroup>
+
+        <div class="grid" style="margin-top: 2rem;">
+            <div class="card">
+                <h3>🎯 Наша миссия</h3>
+                <p>Мы создаем удобную платформу для быстрого и простого бронирования столиков в лучших ресторанах города.
+                    Наша цель - сделать процесс планирования вечера максимально комфортным.</p>
+            </div>
+
+            <div class="card">
+                <h3>🚀 Как это работает</h3>
+                <ul>
+                    <li>Выбираете ресторан из нашего каталога</li>
+                    <li>Указываете дату, время и количество гостей</li>
+                    <li>Оставляете особые пожелания, если нужно</li>
+                    <li>Получаете подтверждение бронирования</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🏆 Наши преимущества</h3>
+                <ul>
+                    <li>Широкий выбор ресторанов различной кухни</li>
+                    <li>Прозрачная система бронирования</li>
+                    <li>Мгновенное подтверждение</li>
+                    <li>Удобное управление своими бронированиями</li>
+                    <li>Поддержка 24/7</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📞 Контакты</h3>
+                <p><strong>Email:</strong> info@stolikonline.ru</p>
+                <p><strong>Телефон:</strong> +7 (999) 841-17-87</p>
+                <p><strong>Время работы поддержки:</strong> круглосуточно</p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 2rem; text-align: center;">
+            <h3>💡 Присоединяйтесь к нам!</h3>
+            <p>Если вы владелец ресторана и хотите подключиться к нашей платформе,
+                напишите нам на email или позвоните по указанному телефону.</p>
+            <div style="margin-top: 1rem;">
+                <a href="/restaurants/all" class="contrast" style="margin-right: 1rem;">
+                    Посмотреть рестораны
+                </a>
+                <a href="/bookings/add" class="secondary">
+                    Забронировать столик
+                </a>
+            </div>
+        </div>
+    </article>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<style>
+    /* Основные цвета темной темы */
+    :root {
+        --dark-bg: #1a1a1a;
+        --card-bg: #2d2d2d;
+        --card-border: #404040;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --accent-color: #3498db;
+        --accent-hover: #2980b9;
+    }
+
+    body {
+        background-color: var(--dark-bg);
+        color: var(--text-primary);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        border-color: var(--accent-color);
+    }
+
+    .card h3 {
+        color: var(--accent-color);
+        margin-top: 0;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid var(--accent-color);
+        padding-bottom: 0.5rem;
+    }
+
+    .card p, .card li {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .card ul {
+        padding-left: 1.5rem;
+    }
+
+    .card li {
+        margin-bottom: 0.5rem;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    h1 {
+        color: var(--text-primary);
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    hgroup p {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    /* Кнопки */
+    .contrast {
+        background-color: var(--accent-color);
+        color: white;
+        padding: 0.7rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+    .contrast:hover {
+        background-color: var(--accent-hover);
+    }
+
+    .secondary {
+        background-color: #555;
+        color: white;
+        padding: 0.7rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+        border: 1px solid #666;
+    }
+
+    .secondary:hover {
+        background-color: #666;
+        border-color: var(--accent-color);
+        color: var(--accent-color);
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card {
+            padding: 1rem;
+        }
+    }
+</style>
+</body>
+</html>

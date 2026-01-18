@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/head :: head">
+    <title>Профиль - СтоликОнлайн</title>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container">
+    <hgroup>
+        <h1>Профиль пользователя</h1>
+        <p>Управление вашей учетной записью</p>
+    </hgroup>
+
+    <div class="grid">
+        <!-- Информация -->
+        <article class="card">
+            <div class="text-center">
+                <div class="avatar-container">
+                    <!-- Аватар уменьшен в 2 раза -->
+                    <img th:src="${user.profilePictureUrl ?: '/pic/user-avatar.png'}"
+                         alt="Аватар"
+                         class="avatar-img"
+                         onerror="this.onerror=null; this.src='/pic/user-avatar.png';">
+                </div>
+                <h2 class="user-name" th:text="${user.fullName} ?: 'Пользователь'"></h2>
+                <p><strong>Логин:</strong> <span th:text="${user.username}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                <p><strong>Телефон:</strong> <span th:text="${user.phone}"></span></p>
+                <p><strong>Возраст:</strong> <span th:text="${user.age} + ' лет'"></span></p>
+
+                <div style="margin-top: 0.5rem;">
+                    <strong>Роль:</strong>
+                    <span th:text="${roleDisplayName} ?: 'Пользователь'"></span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Статистика -->
+        <article class="card">
+            <h3>📊 Статистика</h3>
+            <div style="margin-top: 1rem;">
+                <p><strong>Всего бронирований:</strong>
+                    <span th:text="${stats?.totalBookings != null} ? ${stats.totalBookings} : '0'"></span>
+                </p>
+                <p><strong>Активные:</strong>
+                    <span th:text="${stats?.activeBookings != null} ? ${stats.activeBookings} : '0'"></span>
+                </p>
+                <p><strong>Завершенные:</strong>
+                    <span th:text="${stats?.completedBookings != null} ? ${stats.completedBookings} : '0'"></span>
+                </p>
+                <p><strong>Отмененные:</strong>
+                    <span th:text="${stats?.cancelledBookings != null} ? ${stats.cancelledBookings} : '0'"></span>
+                </p>
+            </div>
+
+            <div style="margin-top: 1.2rem;">
+                <a href="/bookings/my" class="secondary" style="display: block; text-align: center;">
+                    Мои бронирования
+                </a>
+            </div>
+        </article>
+    </div>
+
+    <!-- Быстрые действия -->
+    <section style="margin-top: 1.5rem;">
+        <h2>Быстрые действия</h2>
+        <div class="grid">
+            <a href="/restaurants/all" style="text-decoration: none;">
+                <article class="card text-center">
+                    <h3>🍽️ Бронировать</h3>
+                    <p>Выбрать ресторан и столик</p>
+                </article>
+            </a>
+
+            <a href="/bookings/my" style="text-decoration: none;">
+                <article class="card text-center">
+                    <h3>📋 Мои брони</h3>
+                    <p>Просмотр и управление</p>
+                </article>
+            </a>
+
+            <a href="/static" style="text-decoration: none;">
+                <article class="card text-center">
+                    <h3>🔍 Поиск</h3>
+                    <p>Найти рестораны</p>
+                </article>
+            </a>
+        </div>
+    </section>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<style>
+    /* Основные цвета темной темы */
+    :root {
+        --dark-bg: #1a1a1a;
+        --card-bg: #2d2d2d;
+        --card-border: #404040;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --accent-color: #3498db;
+        --accent-hover: #2980b9;
+        --badge-bg: #3a3a3a;
+        --success-bg: #155724;
+        --error-bg: #721c24;
+    }
+
+    /* Темный фон для всей страницы */
+    body {
+        background-color: var(--dark-bg);
+        color: var(--text-primary);
+    }
+
+    /* Темные карточки */
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 6px;
+        padding: 1rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        border-color: var(--accent-color);
+    }
+
+    /* Заголовки в карточках */
+    .card h3 {
+        color: var(--text-primary);
+        margin-top: 0;
+        font-size: 1.2rem;
+        border-bottom: 1px solid var(--accent-color);
+        padding-bottom: 0.3rem;
+        margin-bottom: 0.6rem;
+    }
+
+    /* Текст в карточках */
+    .card p {
+        color: var(--text-secondary);
+        margin: 0.3rem 0;
+        font-size: 0.9rem;
+    }
+
+    /* Общие стили для кнопок */
+    .secondary {
+        background-color: #555;
+        color: white;
+        border: 1px solid #666;
+        padding: 0.5rem 0.8rem;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-align: center;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+
+    .secondary:hover {
+        background-color: #666;
+        border-color: var(--accent-color);
+        color: var(--accent-color);
+    }
+
+    /* Заголовок страницы */
+    h1 {
+        color: var(--text-primary);
+        text-align: center;
+        margin-bottom: 0.3rem;
+        font-size: 1.6rem;
+    }
+
+    hgroup p {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 1.2rem;
+        font-size: 0.95rem;
+    }
+
+    /* Сетка грида */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.2rem;
+        margin-bottom: 1.2rem;
+    }
+
+    /* Контейнер */
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 1.2rem;
+    }
+
+    /* Адаптивность для мобильных устройств */
+    @media (max-width: 768px) {
+        .grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .container {
+            padding: 0.8rem;
+        }
+
+        .avatar-img {
+            width: 16px;  <!-- Уменьшено пропорционально -->
+            height: 16px;
+        }
+
+        .user-name {
+            font-size: 0.95rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .card h3 {
+            font-size: 1rem;
+        }
+
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card {
+            padding: 0.8rem;
+        }
+
+        .avatar-img {
+            width: 15px;  <!-- Еще немного меньше на телефонах -->
+            height: 15px;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+</body>
+</html>

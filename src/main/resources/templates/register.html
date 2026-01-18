@@ -1,0 +1,137 @@
+<!-- register.html -->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+    <title>Регистрация - СтоликОнлайн</title>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container">
+    <div style="max-width: 600px; margin: 0 auto;">
+        <hgroup class="text-center">
+            <h1>Регистрация</h1>
+            <p>Создайте новый аккаунт</p>
+        </hgroup>
+
+        <!-- Сообщения -->
+        <div th:if="${successMessage}" class="success-message">
+            <p th:text="${successMessage}"></p>
+        </div>
+
+        <div th:if="${errorMessage}" class="error-message" style="padding: 1rem; background: #f8d7da; border-radius: 0.5rem;">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <!-- Форма регистрации -->
+        <form th:action="@{/users/register}" method="post" th:object="${userRegistrationDto}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div class="grid">
+                <div>
+                    <label>
+                        Логин *
+                        <input type="text"
+                               th:field="*{username}"
+                               th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''"
+                               placeholder="Логин"
+                               required>
+                        <small th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></small>
+                    </label>
+                </div>
+
+                <div>
+                    <label>
+                        Email *
+                        <input type="email"
+                               th:field="*{email}"
+                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                               placeholder="email@example.com"
+                               required>
+                        <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></small>
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <label>
+                        Имя *
+                        <input type="text"
+                               th:field="*{fullName}"
+                               th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid' : ''"
+                               placeholder="Иван Иванов"
+                               required>
+                        <small th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="error-message"></small>
+                    </label>
+                </div>
+
+                <div>
+                    <label>
+                        Телефон *
+                        <input type="tel"
+                               th:field="*{phone}"
+                               th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
+                               placeholder="+7 (999) 123-45-67"
+                               required>
+                        <small th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error-message"></small>
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <label>
+                        Возраст *
+                        <input type="number"
+                               th:field="*{age}"
+                               th:classappend="${#fields.hasErrors('age')} ? 'is-invalid' : ''"
+                               min="14" max="100"
+                               placeholder="14"
+                               required>
+                        <small th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="error-message"></small>
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <label>
+                        Пароль *
+                        <input type="password"
+                               th:field="*{password}"
+                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                               placeholder="Пароль"
+                               required>
+                        <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></small>
+                    </label>
+                </div>
+
+                <div>
+                    <label>
+                        Подтвердите пароль *
+                        <input type="password"
+                               th:field="*{confirmPassword}"
+                               th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"
+                               placeholder="Повторите пароль"
+                               required>
+                        <small th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-message"></small>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="contrast" style="width: 100%; margin-top: 1rem;">
+                Зарегистрироваться
+            </button>
+        </form>
+
+        <div class="text-center" style="margin-top: 2rem;">
+            <p>Уже есть аккаунт? <a href="/users/login">Войдите</a></p>
+            <p><a href="/static">Вернуться на главную</a></p>
+        </div>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
